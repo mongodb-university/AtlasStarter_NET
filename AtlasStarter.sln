@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlasStarter", "AtlasStarter\AtlasStarter.csproj", "{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}"
 EndProject
 Global
@@ -9,9 +10,15 @@ Global
 		Release|anycpu = Release|anycpu
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Debug|anycpu.ActiveCfg = Debug|anycpu
-		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Debug|anycpu.Build.0 = Debug|anycpu
-		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Release|anycpu.ActiveCfg = Release|anycpu
-		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Release|anycpu.Build.0 = Release|anycpu
+		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{7A0B4AB1-2FE0-416C-86EE-118295FA24CB}.Release|anycpu.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E674D0F-0868-4BC2-9724-4762DA0874A3}
 	EndGlobalSection
 EndGlobal

@@ -11,9 +11,9 @@ namespace AtlasStarter
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Welcome! Please provide your Atlas connection string:", ConsoleColor.DarkBlue);
+            WritePrompt("Welcome! Please provide your Atlas connection string:");
             var url = Console.ReadLine();
-            Console.WriteLine($"Connecting to {url}...");
+            WritePrompt($"Connecting to {url}...");
 
             IMongoClient client;
             IMongoCollection<BsonDocument> collection;
@@ -24,13 +24,12 @@ namespace AtlasStarter
             }
             catch (Exception e)
             {
-                Console.WriteLine("Uh oh. I couldn't connect. Did you provide a valid username and password?", ConsoleColor.Red);
-                Console.WriteLine($"Here's the exception: {e}", ConsoleColor.Red);
+                WriteError("Uh oh. I couldn't connect. Did you provide a valid username and password?", e);
                 return;
             }
-            Console.WriteLine("What's the  name of the database you want to use?", ConsoleColor.DarkBlue);
+            WritePrompt("What's the  name of the database you want to use?");
             var dbName = Console.ReadLine();
-            Console.WriteLine("What's the  name of the colletion you want to use?", ConsoleColor.DarkBlue);
+            WritePrompt("What's the  name of the colletion you want to use?");
             var collectionName = Console.ReadLine();
 
             try
@@ -38,12 +37,11 @@ namespace AtlasStarter
                 collection = client.GetDatabase(dbName).GetCollection<BsonDocument>(collectionName);
             }catch (Exception e)
             {
-                Console.WriteLine("Uh oh. I couldn't find or create the collection. Did you enter a blank value for one of the names, perhaps?", ConsoleColor.Red);
-                Console.WriteLine($"Here's the exception: {e}", ConsoleColor.Red);
+                WriteError("Uh oh. I couldn't find or create the collection. Did you enter a blank value for one of the names, perhaps?", e);
                 return;
             }
 
-            Console.WriteLine("I'm ready to write 4 test documents now. Press any key to continue.", ConsoleColor.DarkBlue);
+            WritePrompt("I'm ready to write 4 test documents now. Press any key to continue.");
             Console.ReadKey();
 
             try
@@ -73,13 +71,11 @@ namespace AtlasStarter
             }
             catch (Exception e)
             {
-                Console.WriteLine("Something went wrong; I couldn't insert the documents.", ConsoleColor.Red);
-                Console.WriteLine($"Here's the exception: {e}", ConsoleColor.Red);
-
+                WriteError("Something went wrong; I couldn't insert the documents.", e);
                 return;
             }
 
-            Console.WriteLine("Done. Here are the documents I created:", ConsoleColor.DarkBlue);
+            WritePrompt("Done. Here are the documents I created:");
 
             foreach(BsonDocument doc in collection.Find(Builders<BsonDocument>.Filter.Empty).ToList())
             {
@@ -95,12 +91,12 @@ namespace AtlasStarter
 
             if (findResult == null)
             {
-                Console.WriteLine("Something went wrong; I couldn't find that document.", ConsoleColor.Red);
+                WriteError("Something went wrong; I couldn't find that document.", null);
                 return;
             }
-            Console.WriteLine($"I found the document with foo = {id}:", ConsoleColor.DarkBlue);
-            Console.WriteLine($"{findResult.ToString()}.", ConsoleColor.White);
-            Console.WriteLine("I will now update the info.x value on that document.", ConsoleColor.DarkBlue);
+            WritePrompt($"I found the document with foo = {id}:");
+            Console.WriteLine($"{findResult.ToString()}.");
+            WritePrompt("I will now update the info.x value on that document.");
 
             var update = Builders<BsonDocument>.Update.Set("info.x", 420);
             var options = new FindOneAndUpdateOptions<BsonDocument, BsonDocument>() { ReturnDocument = ReturnDocument.After };
@@ -108,18 +104,18 @@ namespace AtlasStarter
 
             findResult = collection.Find(filter).FirstOrDefault();
 
-            Console.WriteLine("Here's the updated document:", ConsoleColor.DarkBlue);
-            Console.WriteLine(updatedDocument.ToString(), ConsoleColor.White);
-            Console.WriteLine("Press any key to delete all the records, or Ctrl-C to quit without deleting.", ConsoleColor.DarkBlue);
+            WritePrompt("Here's the updated document:");
+            Console.WriteLine(updatedDocument.ToString());
+            WritePrompt("Press any key to delete all the records, or Ctrl-C to quit without deleting.");
             Console.ReadLine();
 
             var deleteResult = collection.DeleteMany(Builders<BsonDocument>.Filter.In("name", names));
-            Console.WriteLine($"I deleted {deleteResult.DeletedCount} records.", ConsoleColor.DarkBlue);
+            WritePrompt($"I deleted {deleteResult.DeletedCount} records.");
         }
 
         private static int getNumberFromUser()
         {
-            Console.WriteLine("Type a number between 0 and 3", ConsoleColor.DarkBlue);
+            WritePrompt("Type a number between 0 and 3");
             var input = Console.ReadKey().KeyChar;
             Console.WriteLine();
             int id = -1;
@@ -127,11 +123,29 @@ namespace AtlasStarter
 
             if (id < 0 || id > 3)
             {
-                Console.WriteLine("That was not a valid number; please try again.", ConsoleColor.Red);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("That was not a valid number; please try again.");
+                Console.ForegroundColor = ConsoleColor.White;
                 return getNumberFromUser();
             }
 
             else return id;
+        }
+
+        private static void WritePrompt(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine(text);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        private static void WriteError(string text, Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(text);
+            Console.WriteLine($"Here's the exception: {e}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.ReadLine();
+            return;
         }
     }
 }
